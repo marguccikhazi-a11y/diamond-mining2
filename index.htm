@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Добыча алмазов как технологический процесс</title>
+    <style>
+        /* ---------- ОБНУЛЕНИЕ ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ---------- ФОН СТРАНИЦЫ ---------- */
+        body {
+            font-family: 'DejaVu Sans Mono', monospace, serif;
+            background-color: #d9eaf7;   /* голубоватый */
+            color: #1a2c3e;
+        }
+
+        /* ---------- ШАПКА НА ВЕСЬ ЭКРАН С КАРТИНКОЙ ---------- */
+        .fullscreen-header {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background-image: url('мирный.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.45);
+            z-index: 1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .header-content h1 {
+            font-size: 3rem;
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+            border-bottom: none;
+            margin-bottom: 20px;
+        }
+
+        /* ---------- НАВИГАЦИЯ (без классов) ---------- */
+        .fullscreen-header nav {
+            background-color: transparent;
+            display: flex;
+            justify-content: center;
+        }
+
+        .fullscreen-header #nav-list {
+            display: inline-flex;
+            gap: 0;
+            padding: 0;
+            margin: 0;
+            background: rgba(26, 74, 118, 0.85);
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+            list-style: none;
+        }
+
+        .fullscreen-header #nav-list li {
+            margin: 0;
+            padding: 0;
+        }
+
+        .fullscreen-header #nav-list a {
+            display: inline-block;
+            padding: 12px 28px;
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 700;
+            text-shadow: 0 0 2px black;
+            transition: background 0.2s;
+            border-radius: 40px;
+        }
+
+        /* подсветка навигации при наведении */
+        .fullscreen-header #nav-list a:hover {
+            background-color: #0f4a6f;
+        }
+
+        /* ---------- ОСНОВНОЙ КОНТЕНТ ---------- */
+        .content-wrapper {
+            background-color: rgba(230, 242, 250, 0.95);
+            border-top: 3px solid #1e5a7a;
+        }
+
+        main {
+            width: 1200px;
+            margin: 0 auto;
+            padding: 30px 40px;
+        }
+
+        /* заголовки h2 (будут якорями) */
+        h2 {
+            font-size: 3rem;
+            color: #0a4b6e;
+            margin-top: 30px;
+            margin-bottom: 14px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #1e5a7a;
+        }
+
+        /* общий стиль абзацев */
+        p {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin-bottom: 14px;
+            color: #1c3b4f;
+        }
+
+        /* блок "Технологический процесс" */
+        #mesto {
+            border: 3px solid #1e5a7a;
+            background-color: #f0f8ff;
+            border-radius: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 20px;
+            margin-left: -50px;
+            margin-right: -50px;
+            width: calc(100% + 50px);
+            padding: 15px;
+        }
+
+        #mesto img {
+            width: 850px;
+            border-radius: 10px;
+            height: auto;
+            flex-shrink: 0;
+        }
+
+        #mesto > :not(img) {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        /* все ссылки – без подчёркивания */
+        a {
+            text-decoration: none;
+        }
+
+        /* контейнер для SVG-схемы */
+        #scheme-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        svg {
+            display: block;
+            margin: 0 auto;
+            min-width: 1010px;
+        }
+
+        /* ----- ПОДСВЕТКА ЭТАПОВ В SVG (при наведении) ----- */
+        svg a {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        svg a:hover rect {
+            fill: #c2e0f0;
+            stroke: #0f4a6f;
+        }
+        svg a:hover text:first-of-type {
+            fill: #0f4a6f;
+            font-weight: bold;
+        }
+        svg a:hover + text,
+        svg a:hover ~ text {
+            fill: #1e5a7a;
+        }
+
+        /* блок с подробным описанием этапов */
+        #ponyatiya {
+            border: 2px dashed #2b7a9c;
+            background-color: #eef5fc;
+            padding: 20px 28px;
+            margin: 24px 0;
+        }
+
+        /* списки */
+        ol, ul {
+            padding-left: 1.5rem;
+        }
+
+        li {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 6px;
+            color: #1a3b4e;
+        }
+
+        #ponyatiya li {
+            overflow: auto;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #bbd4f0;
+        }
+
+        /* жирные заголовки этапов – превращаем в ссылки на #etapy-title (без JS) */
+        #ponyatiya li a {
+            font-weight: bold;
+            color: #1a3b4e;
+            cursor: pointer;
+        }
+        #ponyatiya li a:hover {
+            color: #1e5a7a;
+            text-decoration: none;
+        }
+
+        /* картинки внутри описания (справа) */
+        #ponyatiya li figure {
+            float: right;
+            margin: 0 0 15px 25px;
+            width: 700px;
+            text-align: center;
+        }
+        #ponyatiya li figure img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+        }
+        #ponyatiya li figure figcaption {
+            font-size: 0.8rem;
+            font-style: italic;
+            color: #2c6b8f;
+            margin-top: 6px;
+        }
+
+        /* блок "Фото" */
+        #image-placeholder {
+            width: 100%;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            margin: 20px 0;
+        }
+
+        /* футер */
+        footer {
+            border-top: 3px solid #1e5a7a;
+            background-color: #e3f0f9;
+            text-align: center;
+            padding: 20px;
+        }
+        #footer-almazyky {
+            font-size: 1rem;
+            color: #1e5a7a;
+            font-weight: 700;
+            letter-spacing: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<header class="fullscreen-header">
+    <div class="header-overlay"></div>
+    <div class="header-content">
+        <h1 id="head">Добыча алмазов как технологический процесс</h1>
+        <nav>
+            <ul id="nav-list">
+                <li><a href="#mesto">Технологический процесс</a></li>
+                <li><a href="#etapy-title">Этапы добычи</a></li>
+                <li><a href="#pictures-title">Фото</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="content-wrapper">
+    <main>
+        <!-- Блок "Технологический процесс" -->
+        <div id="mesto">
+            <img src="добыча.jpg" alt="Техпроцесс" title="г.Мирный">
+            <p><strong>Технологический процесс</strong> — это упорядоченная последовательность действий, операций и переходов, направленных на превращение сырья, материалов или заготовок в готовый продукт. Он является основой любого производства, определяя, как именно, на каком оборудовании и в каком порядке создается изделие.</p>
+            <p><em>Процесс добычи алмазов</em></p>
+        </div>
+
+        <!-- Заголовок "Этапы добычи алмазов" (на него будут вести ссылки из текста) -->
+        <a href="#head"><h2 id="etapy-title">Этапы добычи алмазов</h2></a>
+
+        <!-- SVG-схема (все ссылки ведут на соответствующие id в #ponyatiya) -->
+        <div id="scheme-container">
+            <svg width="1010" height="250" xmlns="http://www.w3.org/2000/svg">
+                <!-- Этап 1 -->
+                <a href="#odin">
+                    <rect x="20" y="20" width="200" height="80" rx="6" fill="#d6eaf8" stroke="#1e5a7a" stroke-width="2.5"/>
+                    <text x="120" y="50" text-anchor="middle" font-family="Georgia, serif" font-size="18" font-weight="bold" fill="#1e2f3e">Этап 1</text>
+                </a>
+                <text x="120" y="72" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#2c6b8f">Разведка и поиск</text>
+                <line x1="220" y1="60" x2="270" y2="60" stroke="#1e5a7a" stroke-width="2.5"/>
+                <polygon points="270,52 286,60 270,68" fill="#1e5a7a"/>
+
+                <!-- Этап 2 -->
+                <a href="#dva">
+                    <rect x="286" y="20" width="200" height="80" rx="6" fill="#d6eaf8" stroke="#1e5a7a" stroke-width="2.5"/>
+                    <text x="386" y="50" text-anchor="middle" font-family="Georgia, serif" font-size="18" font-weight="bold" fill="#1e2f3e">Этап 2</text>
+                </a>
+                <text x="386" y="72" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#2c6b8f">Добыча руды</text>
+                <line x1="486" y1="60" x2="536" y2="60" stroke="#1e5a7a" stroke-width="2.5"/>
+                <polygon points="536,52 552,60 536,68" fill="#1e5a7a"/>
+
+                <!-- Этап 3 -->
+                <a href="#tri">
+                    <rect x="552" y="20" width="200" height="80" rx="6" fill="#d6eaf8" stroke="#1e5a7a" stroke-width="2.5"/>
+                    <text x="652" y="50" text-anchor="middle" font-family="Georgia, serif" font-size="18" font-weight="bold" fill="#1e2f3e">Этап 3</text>
+                </a>
+                <text x="652" y="72" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#2c6b8f">Обогащение руды</text>
+                <line x1="752" y1="60" x2="802" y2="60" stroke="#1e5a7a" stroke-width="2.5"/>
+                <polygon points="802,52 818,60 802,68" fill="#1e5a7a"/>
+
+                <!-- Этап 4 -->
+                <a href="#four">
+                    <rect x="818" y="20" width="120" height="80" rx="6" fill="#d6eaf8" stroke="#1e5a7a" stroke-width="2.5"/>
+                    <text x="878" y="50" text-anchor="middle" font-family="Georgia, serif" font-size="18" font-weight="bold" fill="#1e2f3e">Этап 4</text>
+                </a>
+                <text x="878" y="72" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#2c6b8f">Сортировка</text>
+                <line x1="878" y1="100" x2="878" y2="140" stroke="#2c7fb8" stroke-width="2.5"/>
+                <polygon points="870,140 878,156 886,140" fill="#2c7fb8"/>
+
+                <!-- Этап 5 -->
+                <a href="#pat">
+                    <rect x="748" y="156" width="260" height="80" rx="6" fill="#f0f8ff" stroke="#2c7fb8" stroke-width="2.5"/>
+                    <text x="878" y="186" text-anchor="middle" font-family="Georgia, serif" font-size="18" font-weight="bold" fill="#1e2f3e">Этап 5</text>
+                </a>
+                <text x="878" y="208" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#2c6b8f">Обогащение руды</text>
+                <line x1="748" y1="196" x2="665" y2="196" stroke="#2c7fb8" stroke-width="2.5"/>
+                <polygon points="665,188 649,196 665,204" fill="#2c7fb8"/>
+
+                <!-- Этап 6 -->
+                <a href="#six">
+                    <rect x="389" y="156" width="260" height="80" rx="6" fill="#f0f8ff" stroke="#2c7fb8" stroke-width="2.5"/>
+                    <text x="519" y="186" text-anchor="middle" font-family="Georgia, serif" font-size="18" font-weight="bold" fill="#1e2f3e">Этап 6</text>
+                </a>
+                <text x="519" y="208" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#2c6b8f">Реализация алмазов</text>
+                <line x1="389" y1="196" x2="306" y2="196" stroke="#2c7fb8" stroke-width="2.5"/>
+                <polygon points="306,188 290,196 306,204" fill="#2c7fb8"/>
+
+                <!-- Этап 7 -->
+                <a href="#seven">
+                    <rect x="30" y="156" width="260" height="80" rx="6" fill="#f0f8ff" stroke="#2c7fb8" stroke-width="2.5"/>
+                    <text x="160" y="186" text-anchor="middle" font-family="Georgia, serif" font-size="18" font-weight="bold" fill="#1e2f3e">Этап 7</text>
+                </a>
+                <text x="160" y="208" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#2c6b8f">Огранка и полировка</text>
+            </svg>
+        </div>
+
+        <!-- Развёрнутое описание этапов (каждый пункт имеет id, на который ссылается схема) -->
+        <div id="ponyatiya">
+            <ul>
+                <li id="odin">
+                    <figure style="float: right; margin: 0 0 10px 20px; width: 750px;">
+                        <img src="razvedka.png" alt="Разведка" style="width:100%; height:auto; display:block; border-radius:8px;">
+                        <figcaption style="font-size:0.8rem; text-align:center; margin-top:5px; color:#2c6b8f;">Кимберлитовая трубка на алмазном руднике в Якутии</figcaption>
+                    </figure>
+                    <a href="#etapy-title"><strong>Этап 1. Разведка и подготовка месторождения</strong></a><br>
+                    Алмазы образуются на глубине 150–200 километров при давлении около 50 000 атмосфер и температуре свыше 1000°C. Из таких недр их выносят вулканические взрывы, создавая кимберлитовые трубки — геологические тела в форме конуса или «чаши на длинной ножке». Поиск трубок начинается с анализа магнитного поля Земли (кимберлиты содержат магнитные минералы), а также с поиска минералов-спутников: пиропа, хромдиопсида, ильменита. Геологи прочёсывают сотни квадратных километров, отбирают пробы породы, бурят скважины на глубину до 2 км. Если найдена промышленная трубка, готовят инфраструктуру: вырубают лес, снимают верхний слой почвы (вскрышу), строят дороги, линии электропередач, вахтовые посёлки для рабочих. В Якутии и других северных регионах всё это осложняется вечной мерзлотой и суровым климатом. Только чтобы получить 1 карат (0,2 грамма) алмазов, нужно добыть и переработать не менее 1 тонны руды.
+                </li>
+                <li id="dva">
+                    <figure style="float: right; margin: 0 0 10px 20px; width: 750px;">
+                        <img src="доббб.jpg" alt="Добыча" style="width:100%; height:auto; display:block; border-radius:8px;">
+                        <figcaption style="font-size:0.8rem; text-align:center; margin-top:5px; color:#2c6b8f;">Открытая добыча</figcaption>
+                    </figure>
+                    <a href="#etapy-title"><strong>Этап 2. Добыча руды – открытый и подземный способ</strong></a><br>
+                    Пока кимберлитовая трубка находится на глубине до 600 метров, её разрабатывают открытым способом — карьером. Сначала удаляют покрывающие породы, затем вскрывают саму трубку. Взрывники бурят шпуры (короткие скважины) и закладывают взрывчатку — сотни тонн на один массовый взрыв. Взорванная руда падает в воронки, где её подбирают гигантские экскаваторы (размером с двухэтажный дом) и грузят в самосвалы грузоподъёмностью до 150 тонн. Чтобы подняться со дна карьера на поверхность, самосвал проезжает по серпантину до 10 км. Когда карьер достигает предельной глубины (дальше становится небезопасно или нерентабельно), переходят к подземному способу. Строят шахту: проходят вертикальные стволы и горизонтальные штреки к телу трубки. Там работают проходческие комбайны — их называют «Бобик». Они разрушают породу режущими зубцами и сразу грузят её в вагонетки или на ленточные конвейеры. В шахтах действуют строгие правила безопасности: плакаты, инструктажи, суеверия шахтёров (никогда не называют смену «последней», говорят «крайняя», а перед спуском не возвращаются домой за забытой вещью — это к беде).
+                </li>
+                <li id="tri">
+                    <figure style="float: right; margin: 0 0 10px 20px; width: 550px;">
+                        <img src="дроб.jfif" alt="Добыча" style="width:100%; height:auto; display:block; border-radius:8px;">
+                        <figcaption style="font-size:0.8rem; text-align:center; margin-top:5px; color:#2c6b8f;">Первое дробление</figcaption>
+                    </figure>
+                    <a href="#etapy-title"><strong>Этап 3. Транспортировка и первичное дробление</strong></a><br>
+                    Добытая руда из карьера или шахты доставляется на обогатительную фабрику. Первое, что её ждёт, — щековая дробилка. Это две могучие стальные плиты (одна неподвижная, другая качающаяся). Между ними попадают куски породы размером более полуметра, и они раскалываются как орехи. За сутки такая дробилка перерабатывает до 6000 тонн руды — почти 250 тонн в час. Важно не перетереть руду в пыль, но и не оставить слишком крупные куски. Дроблёная порода по ленточным конвейерам отправляется дальше — в мельницы.
+                </li>
+                <li id="four">
+                    <figure style="float: right; margin: 0 0 10px 20px; width: 650px;">
+                        <img src="гроя.jpg" alt="Добыча" style="width:100%; height:auto; display:block; border-radius:8px;">
+                        <figcaption style="font-size:0.8rem; text-align:center; margin-top:5px; color:#2c6b8f;">Дробление с помощью воды</figcaption>
+                    </figure>
+                    <a href="#etapy-title"><strong>Этап 4. Измельчение и грохочение</strong></a><br>
+                    Теперь руда попадает в мельницы мокрого самоизмельчения. Это огромные вращающиеся барабаны (диаметром до 7 метров), куда добавляют воду. Под действием центробежной силы и ударов куски породы дробятся друг о друга и о броневые плиты стенок, превращаясь в фракцию размером до 50 мм. Полученная пульпа (смесь воды и измельчённой руды) поступает на грохот — устройство, напоминающее вибрирующее сито с ячейками разного размера (обычно пять уровней). Грохот работает очень шумно и разделяет материал на классы крупности: от самых мелких частиц до 50-миллиметровых. Это необходимо, потому что методы извлечения алмазов зависят от размера камней (крупные и мелкие ловят по-разному).
+                </li>
+                <li id="pat">
+                    <figure style="float: right; margin: 0 0 10px 20px; width: 650px;">
+                        <img src="обог.jpg" alt="Добыча" style="width:100%; height:auto; display:block; border-radius:8px;">
+                        <figcaption style="font-size:0.8rem; text-align:center; margin-top:5px; color:#2c6b8f;">Натуральные необработанные алмазы</figcaption>
+                    </figure>
+                    <a href="#etapy-title"><strong>Этап 5. Обогащение — извлечение алмазов из породы</strong></a><br>
+                    Главное чудо происходит здесь, используя уникальные физические свойства алмазов.
+                    Для крупных кристаллов (более 2–3 мм) применяют рентгенолюминесцентные сепараторы. Руда движется по ленте конвейера под рентгеновским излучением. Алмаз начинает светиться — даёт характерную вспышку. Фотоэлементы мгновенно фиксируют свет, и воздушная пушка выстреливает струёй воздуха, которая выбивает драгоценный камень в отдельный приёмный карман. Пустая порода просто падает в отвал.
+                    Для мелких алмазов (менее 2 мм) используют пленочную флотацию. Здесь работает другое свойство алмаза — гидрофобность (отталкивание воды). Руду смешивают с водой и специальными реагентами (пенообразователями). Пустая порода смачивается и тонет, а алмазы прилипают к пузырькам воздуха и химическим реагентам, образуя сверху слой драгоценной плёнки. Этот слой снимают и отправляют на дальнейшую обработку. Кроме того, иногда применяют тяжелосредную сепарацию (в жидкости с промежуточной плотностью) и магнитные сепараторы для удаления железосодержащих примесей.
+                </li>
+                <li id="six">
+                    <figure style="float: right; margin: 0 0 10px 20px; width: 650px;">
+                        <img src="рук.jpg" alt="Добыча" style="width:100%; height:auto; display:block; border-radius:8px;">
+                        <figcaption style="font-size:0.8rem; text-align:center; margin-top:5px; color:#2c6b8f;">Ручная доводка</figcaption>
+                    </figure>
+                    <a href="#etapy-title"><strong>Этап 6. Ручная доводка и первичная классификация</strong></a><br>
+                    После автоматических сепараторов в концентрате всё ещё могут оставаться посторонние минералы (кварц, пирит, гранаты). Поэтому финальный контроль делают вручную. Опытные операторы за освещённым столом с помощью пинцета и лупы выбирают алмазы, одновременно очищая их от налёта. Они же проводят первичную сортировку по пяти классам крупности. Здесь же отделяют ювелирные алмазы (прозрачные, без трещин и включений) от технических (с дефектами, которые пойдут на абразивы, сверла, пасты). Ручной труд остаётся незаменимым, особенно для крупных и нестандартных камней.
+                </li>
+                <li id="seven">
+                    <figure style="float: right; margin: 0 0 10px 20px; width: 650px;">
+                        <img src="брилики.jpg" alt="Добыча" style="width:100%; height:auto; display:block; border-radius:8px;">
+                        <figcaption style="font-size:0.8rem; text-align:center; margin-top:5px; color:#2c6b8f;">Бриллианты</figcaption>
+                    </figure>
+                    <a href="#etapy-title"><strong>Этап 7. Центр сортировки и продажа</strong></a><br>
+                    Все алмазы со всех месторождений компании (например, АЛРОСА) стекаются в единый Центр сортировки. В России это сначала город Мирный, затем Москва. Здесь камни моют, сушат, взвешивают с точностью до долей карата, и начинается скрупулёзная классификация по международным стандартам: размерно-весовые группы, цвет (от бесцветного до жёлто-коричневого, редкие голубые и розовые), чистота (количество включений), форма (октаэдры, додекаэдры и т.д.). Крупные алмазы (обычно тяжелее 0,5 карата) сортируют вручную эксперты-геммологи. Для средних и мелких используют оптические автоматы, которые анализируют цвет и форму с помощью цифровых камер. После этого близкие по характеристикам алмазы объединяют в продажные «боксы» (например, 20 камней весом 2–3 карата, цвет 3–5, чистота VS). Их выставляют на долгосрочные контракты или международные аукционы. Далее алмазы поступают гранильным предприятиям (диамантерам), где превращаются в бриллианты, а потом — в ювелирные украшения.
+                </li>
+                <li>
+                    <strong>Важно помнить:</strong> весь этот путь — от разведки до продажи — может занять от месяца до года. Чтобы получить 1 карат алмазов, нужно переработать минимум 1 тонну руды, а иногда и до 1700 тонн. И при этом добыча сильно влияет на экосистемы: вырубаются леса, изменяются ландшафты, загрязняются воды тяжелыми металлами. Поэтому современные компании ищут способы уменьшить вред, а также всё чаще используют синтезированные алмазы, созданные в лабораториях.
+                </li>
+            </ul>
+        </div>
+
+        <!-- Блок "Фото" -->
+        <a href="#head"><h2 id="pictures-title">Фото</h2></a>
+        <div id="image-placeholder">
+            <img src="брил.png" alt="Фото 1">
+            <p align="center"><em>Бриллиант</em></p>
+	<img src="цвет.png" alt="Фото 2">
+            <p align="center"><em>Бриллианты цветные</em></p>
+	<img src="цвет.jpg" alt="Фото 3">
+            <p align="center"><em>Бриллиант цветной</em></p>
+	<img src="diam.jpg" alt="Фото 4">
+            <p align="center"><em>Алмаз</em></p>
+        </div>
+    </main>
+
+    <footer>
+        <p id="footer-almazyky">алмазики</p>
+    </footer>
+</div>
+
+</body>
+</html>
